@@ -1,87 +1,33 @@
 import React from "react";
-import firebase from "../../firebase.js";
-import "tachyons";
-const auth = firebase.auth();
-const txtEmail = document.getElementById("email-address");
-const txtPassword = document.getElementById("password");
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import firebaseApp from "../../firebase.js";
+import firebase from "firebase";
 
-class Signin extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			signInEmail: "",
-			signInPassword: ""
-		};
-	}
+const uiConfig = {
+	// Popup signin flow rather than redirect flow.
+	signInFlow: "popup",
+	// Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+	signInSuccessUrl: "/airallowportal",
+	// We will display Google and Facebook as auth providers.
+	signInOptions: [
+		firebase.auth.EmailAuthProvider.PROVIDER_ID,
+		firebase.auth.GoogleAuthProvider.PROVIDER_ID
+	]
+};
 
-	onSubmitInfo = () => {
-		const { onRouteChange } = this.props;
-		console.log("Email", this.state.signInEmail);
-		console.log("Password", this.state.signInPassword);
-		this.props.onRouteChange("home");
-	};
-
+class SignIn extends React.Component {
 	render() {
-		const { onRouteChange } = this.props;
 		return (
-			<article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
-				<main className="pa4 black-80">
-					<div className="measure">
-						<fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-							<legend className="f1 fw6 ph0 mh0">Sign In</legend>
-							<div className="mt3">
-								<label className="db fw6 lh-copy f6" htmlFor="email-address">
-									Email
-								</label>
-								<input
-									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-									type="email"
-									name="email-address"
-									id="email-address"
-									onChange={this.onEmailChange}
-								/>
-							</div>
-							<div className="mv3">
-								<label className="db fw6 lh-copy f6" htmlFor="password">
-									Password
-								</label>
-								<input
-									className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
-									type="password"
-									name="password"
-									id="password"
-									onChange={this.onPasswordChange}
-								/>
-							</div>
-						</fieldset>
-						<div className="">
-							<input
-								onClick={this.onSubmitInfo}
-								className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
-								type="submit"
-								value="Sign in"
-							/>
-						</div>
-						<div className="lh-copy mt3">
-							<p
-								onClick={() => onRouteChange("register")}
-								className="f6 link dim black db pointer"
-							>
-								Register
-							</p>
-						</div>
-					</div>
-				</main>
-			</article>
+			<div>
+				<h1>Air Allow Portal</h1>
+				<p>Please sign-in:</p>
+				<StyledFirebaseAuth
+					uiConfig={uiConfig}
+					firebaseAuth={firebaseApp.auth()}
+				/>
+			</div>
 		);
 	}
-
-	onEmailChange = event => {
-		this.setState({ signInEmail: event.target.value });
-	};
-	onPasswordChange = event => {
-		this.setState({ signInPassword: event.target.value });
-	};
 }
 
-export default Signin;
+export default SignIn;

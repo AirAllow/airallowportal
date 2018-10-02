@@ -13,6 +13,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 // core components
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
 import logo from "assets/img/logo.png";
+import firebase from "../../firebase.js";
 
 import sidebarStyle from "assets/jss/material-dashboard-react/components/sidebarStyle.jsx";
 
@@ -21,6 +22,11 @@ const Sidebar = ({ ...props }) => {
 	function activeRoute(routeName) {
 		return props.location.pathname.indexOf(routeName) > -1 ? true : false;
 	}
+
+	function logOut() {
+		firebase.auth().signOut();
+		console.log("signed out");
+	}
 	const { classes, color, image, logoText, routes } = props;
 	var links = (
 		<List className={classes.list}>
@@ -28,27 +34,26 @@ const Sidebar = ({ ...props }) => {
 				if (prop.redirect) return null;
 				var activePro = " ";
 				var listItemClasses;
-				if (prop.path === "/upgrade-to-pro") {
-					activePro = classes.activePro + " ";
-					listItemClasses = classNames({
-						[" " + classes[color]]: true
-					});
-				} else {
-					listItemClasses = classNames({
-						[" " + classes[color]]: activeRoute(prop.path)
-					});
-				}
+
+				listItemClasses = classNames({
+					[" " + classes[color]]: activeRoute(prop.path)
+				});
+
 				const whiteFontClasses = classNames({
 					[" " + classes.whiteFont]: activeRoute(prop.path)
 				});
 				return (
 					<NavLink
-						to={prop.path}
+						to={prop.path !== "/signin" ? prop.path : "/"}
 						className={activePro + classes.item}
 						activeClassName="active"
 						key={key}
 					>
-						<ListItem button className={classes.itemLink + listItemClasses}>
+						<ListItem
+							button
+							onClick={prop.path == "/signin" ? logOut : undefined}
+							className={classes.itemLink + listItemClasses}
+						>
 							<ListItemIcon className={classes.itemIcon + whiteFontClasses}>
 								<prop.icon />
 							</ListItemIcon>

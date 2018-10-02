@@ -93,7 +93,7 @@ const dashboardRoutes = [
 		component: SignIn
 	},
 
-	{ redirect: true, path: "/", to: "/user", navbarName: "Redirect" }
+	{ redirect: true, path: "/", to: "/", navbarName: "Redirect" }
 ];
 
 export default dashboardRoutes;
